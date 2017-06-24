@@ -71,4 +71,24 @@ node2 | SUCCESS => {
 }
 ```
 
+## How to use (smarter way)
+
+You can use a mix mounts and environment variables that `vertigo/ansible-sshd` and `vertigo/tiny-sshd` recognize in order to get passwordless login all over the "VMs".
+Just check the `docker-compose-key.yml` file.
+
+Starting the "pseudo-VMs" and testing them can be achieved with the commands below (no passwords will be asked):
+
+```sh
+docker-compose -f docker-compose-key.yml up -d
+docker exec -u user -ti ansiblesshd_controller_1 ansible -m ping all
+node1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+node2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
+
 

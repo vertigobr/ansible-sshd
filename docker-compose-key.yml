@@ -1,0 +1,37 @@
+#
+# Build this image before running docker-compose (or just run it anyway to pull it from Docker Hub)
+#
+# This composition starts a 2 VMs scenario with a third VM working as an ansible controller, but also uses the current user's ssh keys to do passwordless logins on all of them.
+# To log into the controller VM just type (password should NOT be asked):
+#
+# export PUBLICKEY=`cat ~/.ssh/id_rsa.pub`
+# ssh -p 2200 user@localhost
+#
+version: '2'
+services:
+  controller:
+    image: vertigo/ansible-sshd:alpine
+    hostname: controller
+    ports:
+      - "2200:22"
+    volumes:
+      - ./ansible-hosts:/etc/ansible/hosts
+      - $HOME/.ssh/id_rsa.pub:/home/user/.ssh/id_rsa.pub
+      - $HOME/.ssh/id_rsa:/home/user/.ssh/id_rsa
+    environment:
+      - HOSTCHECK=false
+      - KEYONLY=true
+      - PUBLICKEY=$PUBLICKEY
+  node1:
+    image: vertigo/tiny-sshd:alpine
+    hostname: node1
+    environment:
+      - KEYONLY=true
+      - PUBLICKEY=$PUBLICKEY
+  node2:
+    environment:
+      - KEYONLY=true
+      - PUBLICKEY=$PUBLICKEY
+    image: vertigo/tiny-sshd:centos
+    hostname: node2
+
