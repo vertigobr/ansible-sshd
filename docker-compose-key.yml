@@ -2,6 +2,9 @@
 # Build this image before running docker-compose (or just run it anyway to pull it from Docker Hub)
 #
 # This composition starts a 2 VMs scenario with a third VM working as an ansible controller, but also uses the current user's ssh keys to do passwordless logins on all of them.
+#
+# docker-compose -f docker-compose-key.yml up -d
+#
 # To log into the controller VM just type (password should NOT be asked):
 #
 # export PUBLICKEY=`cat ~/.ssh/id_rsa.pub`
