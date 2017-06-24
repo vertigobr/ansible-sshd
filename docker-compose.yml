@@ -1,0 +1,26 @@
+#
+# Build this image before running docker-compose (or just run it anyway to pull it from Docker Hub)
+#
+# This composition starts a 2 VMs scenario with a third VM working as an ansible controller.
+# To log into the controller VM just type (password is "secret"):
+#
+# ssh -p 2200 user@localhost
+#
+version: '2'
+services:
+  controller:
+    image: vertigo/ansible-sshd:alpine
+    hostname: controller
+    ports:
+      - "2200:22"
+    volumes:
+      - ./ansible-hosts:/etc/ansible/hosts
+    environment:
+      - HOSTCHECK=false
+  node1:
+    image: vertigo/tiny-sshd:alpine
+    hostname: node1
+  node2:
+    image: vertigo/tiny-sshd:centos
+    hostname: node2
+
